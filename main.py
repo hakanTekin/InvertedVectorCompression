@@ -7,6 +7,12 @@ from bitstream import BitStream
 from golomb_coding import golomb_coding
 from golomb import encode, decode
 
+#The code is set to run for normal crawl dataset
+dv_file_mod = 0 #1 for 16 proc, 0 for crawl.dv files
+doc_file = 'crawl.docs' #'crawl.16proc0.docs'
+terms_file = 'crawl.terms' #'crawl.16proc0.terms'
+dv_0_file = 'crawl.DV.0' #'crawl.16proc0.DV'
+dv_1_file = 'crawl.DV.1'
 """
 Hakan Ahmet Tekin
 CMPE 414 Project 2
@@ -82,21 +88,40 @@ Basically the main method, each step of the project is executed from this method
 def mainline():
     kvp = dict()
 
-    with open('crawl.16proc0.terms', 'r') as file:
+    with open(terms_file, 'r') as file:
         for l in file:
             arr = l.split(' ')
             kvp[ int(arr[1]) ] = []
         print('x')
-
-    with open('crawl.16proc0.DV') as dvfile:
-        docindex = 1
-        for l in dvfile:
-            arr = l.split(' ')
-            i = 1
-            while i < arr.__len__():
-                kvp[ int(arr[i]) ].append(docindex)
-                i+=2
-            docindex+=1
+    if dv_file_mod == 1:
+        with open('crawl.16proc0.DV') as dvfile:
+            docindex = 1
+            for l in dvfile:
+                arr = l.split(' ')
+                i = 1
+                while i < arr.__len__():
+                    kvp[ int(arr[i]) ].append(docindex)
+                    i+=2
+                docindex+=1
+    elif dv_file_mod == 0:
+        with open(dv_0_file) as dvfile:
+            docindex = 1
+            for l in dvfile:
+                arr = l.split(' ')
+                i = 1
+                while i < arr.__len__():
+                    kvp[ int(arr[i]) ].append(docindex)
+                    i+=2
+                docindex+=1
+        with open(dv_1_file) as dvfile:
+            docindex = 1
+            for l in dvfile:
+                arr = l.split(' ')
+                i = 1
+                while i < arr.__len__():
+                    kvp[ int(arr[i]) ].append(docindex)
+                    i+=2
+                docindex+=1
 
     with open('crawl.16proc0.IDV', 'w+') as newfile:
         for i in range(0,len(kvp)):
@@ -108,6 +133,6 @@ def mainline():
             newfile.write('\n')
         print('yy')
 
-with open('crawl.16proc0.IDV', 'r') as f: 
-    golomb_with_sum(f)
-#mainline()
+    with open('crawl.16proc0.IDV', 'r') as f: 
+        golomb_with_sum(f)
+mainline()
