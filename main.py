@@ -12,6 +12,8 @@ Hakan Ahmet Tekin
 CMPE 414 Project 2
 """
 
+#I have only tried the 16proc0 dataset since the machine I am working on is quite slow
+
 """
 This program creates an Inverted Document Vector file IDV. Then it compresses the file and creates IDV.compressed.
 
@@ -43,15 +45,12 @@ def write_index_ones(a, f:TextIOWrapper):
         val = golomb_coding(x,1000)
         index = 0
         previous_index = 0
-        while (index<len(val)-1):
-            index = val.find("1",previous_index,len(val))
-            if(index==-1):
+        while True:
+            index = val.find("1", index+1, len(val))
+            if index==-1:
                 break
-            else:
-                f.write(f'{(index+1)-previous_index}')
-                
-                previous_index = index+1
-        # file_craw_IDV_compressed.write(f'{len(gol)-max}. ')
+            f.write(f'{index-previous_index+1}')    
+            previous_index = index+1
         f.write('.')
     f.write('\n')
 
@@ -109,7 +108,6 @@ def mainline():
             newfile.write('\n')
         print('yy')
 
-    with open('crawl.16proc0.IDV', 'r') as f: 
-        golomb_with_sum(f)
-
-mainline()
+with open('crawl.16proc0.IDV', 'r') as f: 
+    golomb_with_sum(f)
+#mainline()
